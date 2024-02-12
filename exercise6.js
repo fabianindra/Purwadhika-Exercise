@@ -1,62 +1,129 @@
-class User {
-    constructor(name, email, age, score) {
+//1
+
+let userData = [
+    {
+      name: "Rei",
+      email: "rei@gmail.com",
+      age: 22,
+      score: 65,
+    },
+    {
+      name: "Kai",
+      email: "kai@ymail.com",
+      age: 32,
+      score: 52,
+    },
+    {
+      name: "Luffy",
+      email: "luffy@gmail.com",
+      age: 17,
+      score: 43,
+    },
+    {
+      name: "Zoro",
+      email: "zoro@hotmail.com",
+      age: 28,
+      score: 90,
+    },
+  ];
+
+function calculateStudents(data) {
+    let result = {
+        score: {
+            highest:data[0].score,
+            lowest:data[0].score,
+            average:0,
+        },
+        age: {
+            highest:data[0].age,
+            lowest:data[0].age,
+            average:0,
+        }
+    }
+    let totalScore = 0;
+    let totalAge = 0;
+    for(let i = 0; i<data.length; i++) {
+        if (data[i].score > result.score.highest) {
+            result.score.highest = data[i].score;
+        }
+        if (data[i].score < result.score.lowest) {
+            result.score.lowest = data[i].score;
+        }
+        if (data[i].age > result.age.highest) {
+            result.age.highest = data[i].age;
+        }
+        if (data[i].age < result.age.lowest) {
+            result.age.lowest = data[i].age;
+        }
+
+        totalScore += data[i].score;
+        totalAge += data[i].age;
+     
+    }
+    result.score.average = Math.round(totalScore / data.length);
+    result.age.average = Math.round(totalAge / data.length);
+
+    return result; 
+}
+
+console.log(calculateStudents(userData))
+
+//2
+
+class Product {
+    constructor(name, price) {
         this.name = name;
-        this.email = email;
-        this.age = age;
-        this.score = score;
+        this.price = price;
     }
-    get getName() {
-        return this.name;
+};
+
+class Transaction {
+    constructor() {
+        this.total = 0;
+        this.products = [];
     }
-    get getEmail() {
-        return this.email;  
-    }
-    get getAge() {
-        return this.age;
-    }
-    get getScore() {
-        return this.score;
-    }
+
+    addToCart(productObj, qty) {
+        let dataTransaction = {
+            product:productObj,
+            qty:qty,
+            total:productObj.price * qty,
+        };
+        this.products.push(dataTransaction);
+    };
+
+    showTotal() {
+        for(let i = 0; i < this.products.length; i++) {
+            this.total += this.products[i].total;
+        };
+        return this.total;
+    };
+
+    checkout() {
+            let readableTransaction = this.products.map((item) => {
+            return {
+                total:item.total,
+                product:item.product.name,
+                qty:item.qty,
+                }
+            });
+        return {
+            cart : readableTransaction,
+            total : this.total,
+        };
+    };
 }
 
-const user1 = new User("David", "david@gmail.com", 28, 78);
-const user2 = new User("Iki", "iki@gmail.com", 24, 89);
-const user3 = new User("Damon", "damon@yahoo.com", 41, 88);
+let msiRTX3060 = new Product("msi RTX 3060", 9000000);
+let iphone15 = new Product("iPhone 15", 20000000);
 
-function object(obj) {
-    let maxScore = 0;
-    let minScore = 0
-    let averageScore = 0;
-    let maxAge = 0;
-    let minAge = 0;
-    let averageAge = 0;
+let transaction001 = new Transaction();
 
-    for(let i = 0; i < obj.length; i++) {
-        if (obj[i].score > maxScore) {
-            maxScore = obj[i].score
-        }
-        if (obj[i].score > minScore) {
-            minScore = obj[1].score
-        }
-        averageScore += obj[i].score
-    }
-    averageScore = averageScore / obj.length;
-    
-    for(let i = 0; i < obj.length; i++) {
-        if (obj[i].age > maxAge) {
-            maxAge = obj[i].age
-        }
-        if (obj[i].age > minAge) {
-            minAge = obj[1].age
-        }
-        averageAge += obj[i].age
-    }
-    averageAge = averageAge / obj.length;
+transaction001.addToCart(msiRTX3060, 3);
+transaction001.addToCart(iphone15, 1);
 
-    console.log("SCORE");
-    console.log(maxScore, minScore, averageScore);
-    console,log("AGE");
-    console.log(maxAge, minAge, averageAge);
-}
+console.log(transaction001.products);
 
-object(User);
+console.log(transaction001.showTotal());
+
+console.log(transaction001.checkout());
